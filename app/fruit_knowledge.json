@@ -1,0 +1,122 @@
+{
+  "fresh_apple": {
+    "vi_name": "Táo Tươi (Fresh Apple)",
+    "fruit_vi": "Quả Táo",
+    "status": "fresh",
+    "status_badge": "ĐẠT CHUẨN TƯƠI (SAFE)",
+    "calories_per_100g": "52 kcal",
+    "vitamins": "Vitamin C, Vitamin K, Kali, Chất xơ Pectin & Quercetin",
+    "storage_temp": "0°C – 4°C (Độ ẩm 90%)",
+    "shelf_life": "3 – 6 tuần trong ngăn mát tủ lạnh",
+    "quality_assessment": "Bề mặt vỏ căng bóng, sắc tố đỏ/vàng đồng nhất, cấu trúc mô quả săn chắc, không có vết dập cơ học hay đốm nấm.",
+    "recommendation": "Đạt tiêu chuẩn trưng bày kệ siêu thị hoặc đóng gói xuất khẩu. Nên bảo quản tách biệt với chuối chín để hạn chế khí ethylene làm táo nhanh bở."
+  },
+  "rotten_apple": {
+    "vi_name": "Táo Hỏng / Thối (Rotten Apple)",
+    "fruit_vi": "Quả Táo",
+    "status": "rotten",
+    "status_badge": "CẢNH BÁO HỎNG (REJECT)",
+    "calories_per_100g": "Không sử dụng",
+    "vitamins": "Đã suy thoái cấu trúc dinh dưỡng",
+    "storage_temp": "Cần cách ly khỏi kho lạnh ngay lập tức",
+    "shelf_life": "0 ngày (Đã quá hạn / Hư hỏng)",
+    "quality_assessment": "Xuất hiện vùng mô mềm sẫm màu (browning), vết lõm thối nhũn hoặc khuẩn lạc nấm mốc Penicillium expansum.",
+    "recommendation": "CẢNH BÁO AN TOÀN THỰC PHẨM: Tuyệt đối không cắt bỏ phần thối để ăn phần còn lại hoặc ép nước vì độc tố nấm mốc Patulin đã khuếch tán sâu vào mô quả lành. Cần loại bỏ khỏi lô hàng ngay để tránh lây nấm chéo."
+  },
+  "fresh_banana": {
+    "vi_name": "Chuối Tươi (Fresh Banana)",
+    "fruit_vi": "Quả Chuối",
+    "status": "fresh",
+    "status_badge": "ĐẠT CHUẨN TƯƠI (SAFE)",
+    "calories_per_100g": "89 kcal",
+    "vitamins": "Kali (358mg), Vitamin B6, Vitamin C, Magie & Tinh bột kháng",
+    "storage_temp": "13°C – 15°C (Tránh để tủ lạnh sâu gây thâm vỏ)",
+    "shelf_life": "4 – 7 ngày ở nhiệt độ phòng thoáng mát",
+    "quality_assessment": "Vỏ vàng tươi tự nhiên (hoặc xanh điểm vàng), cuống nguyên vẹn, không bị nứt vỏ hay rỉ dịch đường.",
+    "recommendation": "Đạt chuẩn phân phối bán lẻ. Treo nải chuối nơi thoáng gió và có thể bọc màng thực phẩm quanh cuống để làm chậm quá trình chín."
+  },
+  "rotten_banana": {
+    "vi_name": "Chuối Hỏng / Quá Chín Thối (Rotten Banana)",
+    "fruit_vi": "Quả Chuối",
+    "status": "rotten",
+    "status_badge": "CẢNH BÁO HỎNG (REJECT)",
+    "calories_per_100g": "Không sử dụng",
+    "vitamins": "Đã lên men rượu & phân hủy",
+    "storage_temp": "Cần loại bỏ khỏi quầy kệ",
+    "shelf_life": "0 ngày (Đã hư hỏng)",
+    "quality_assessment": "Vỏ chuyển màu đen toàn phần, mô thịt nhũn nước, lên men chua hoặc xuất hiện tơ nấm trắng ở phần cuống.",
+    "recommendation": "CẢNH BÁO LÂY NHIỄM CHÉO: Chuối thối phát thải lượng khí Ethylene cực lớn làm chín ép và làm hỏng toàn bộ hoa quả đặt gần. Cần tách khỏi lô hàng ngay lập tức."
+  },
+  "fresh_orange": {
+    "vi_name": "Cam Tươi (Fresh Orange)",
+    "fruit_vi": "Quả Cam",
+    "status": "fresh",
+    "status_badge": "ĐẠT CHUẨN TƯƠI (SAFE)",
+    "calories_per_100g": "47 kcal",
+    "vitamins": "Vitamin C hàm lượng cao (53.2mg), Folate, Thiamine & Flavonoid Hesperidin",
+    "storage_temp": "4°C – 8°C (Thông thoáng, tránh đọng nước)",
+    "shelf_life": "2 – 4 tuần trong kho mát",
+    "quality_assessment": "Vỏ cam săn chắc, túi tinh dầu căng đều, màu vàng cam rực rỡ, phần đài quả còn tươi và không bị mềm nhũn.",
+    "recommendation": "Đạt chuẩn thương phẩm loại 1. Giữ khô ráo bề mặt vỏ trong suốt quá trình vận chuyển."
+  },
+  "rotten_orange": {
+    "vi_name": "Cam Hỏng / Mốc Xanh (Rotten Orange)",
+    "fruit_vi": "Quả Cam",
+    "status": "rotten",
+    "status_badge": "CẢNH BÁO HỎNG (REJECT)",
+    "calories_per_100g": "Không sử dụng",
+    "vitamins": "Đã nhiễm nấm mốc",
+    "storage_temp": "Cần tiêu hủy an toàn",
+    "shelf_life": "0 ngày (Đã hư hỏng)",
+    "quality_assessment": "Bề mặt vỏ bị úng nước mềm nhũn hoặc phủ lớp bào tử nấm mốc màu xanh lục/trắng phấn (Penicillium digitatum / Penicillium italicum).",
+    "recommendation": "CẢNH BÁO VI SINH: Bào tử mốc xanh trên cam phát tán cực mạnh qua không khí trong kho lạnh. Cần đóng túi kín quả hỏng trước khi di dời để không làm phát tán bào tử sang các thùng cam lành."
+  },
+  "fresh_mango": {
+    "vi_name": "Xoài Tươi (Fresh Mango)",
+    "fruit_vi": "Quả Xoài",
+    "status": "fresh",
+    "status_badge": "ĐẠT CHUẨN TƯƠI (SAFE)",
+    "calories_per_100g": "60 kcal",
+    "vitamins": "Vitamin A (Beta-carotene), Vitamin C, Vitamin E, Folate & Polyphenol",
+    "storage_temp": "10°C – 13°C",
+    "shelf_life": "1 – 2 tuần trong điều kiện mát",
+    "quality_assessment": "Da căng mịn, màu vàng/xanh tươi sáng, mùi thơm đặc trưng, không có đốm đen bệnh thán thư.",
+    "recommendation": "Đạt tiêu chuẩn chất lượng. Bảo quản nơi khô thoáng, tránh va đập mạnh."
+  },
+  "rotten_mango": {
+    "vi_name": "Xoài Hỏng / Thán Thư (Rotten Mango)",
+    "fruit_vi": "Quả Xoài",
+    "status": "rotten",
+    "status_badge": "CẢNH BÁO HỎNG (REJECT)",
+    "calories_per_100g": "Không sử dụng",
+    "vitamins": "Đã phân hủy",
+    "storage_temp": "Cần cách ly ngay",
+    "shelf_life": "0 ngày (Đã hư hỏng)",
+    "quality_assessment": "Xuất hiện các mảng đốm đen lõm sâu (bệnh thán thư Colletotrichum gloeosporioides) hoặc thối nhũn vùng cuống.",
+    "recommendation": "Loại bỏ ngay khỏi dây chuyền đóng gói để ngăn nấm thán thư lây lan."
+  },
+  "fresh_strawberry": {
+    "vi_name": "Dâu Tây Tươi (Fresh Strawberry)",
+    "fruit_vi": "Quả Dâu Tây",
+    "status": "fresh",
+    "status_badge": "ĐẠT CHUẨN TƯƠI (SAFE)",
+    "calories_per_100g": "32 kcal",
+    "vitamins": "Vitamin C, Mangan, Folate & Chất chống oxy hóa Anthocyanin",
+    "storage_temp": "0°C – 2°C (Chỉ rửa ngay trước khi ăn)",
+    "shelf_life": "3 – 5 ngày trong hộp thoáng khí",
+    "quality_assessment": "Quả đỏ mọng, đài lá xanh tươi, bề mặt khô ráo, không bị chảy dịch hay phủ tơ nấm xám.",
+    "recommendation": "Đạt chuẩn. Tuyệt đối không rửa nước trước khi đưa vào bảo quản lạnh."
+  },
+  "rotten_strawberry": {
+    "vi_name": "Dâu Tây Hỏng / Mốc Xám (Rotten Strawberry)",
+    "fruit_vi": "Quả Dâu Tây",
+    "status": "rotten",
+    "status_badge": "CẢNH BÁO HỎNG (REJECT)",
+    "calories_per_100g": "Không sử dụng",
+    "vitamins": "Đã nhiễm nấm Botrytis cinerea",
+    "storage_temp": "Tiêu hủy ngay",
+    "shelf_life": "0 ngày (Đã hư hỏng)",
+    "quality_assessment": "Mô quả nhũn chảy nước và xuất hiện lớp lông tơ nấm mốc màu xám tro (Botrytis cinerea).",
+    "recommendation": "Cần loại bỏ cả các quả nằm sát cạnh vì sợi nấm mốc xám lan truyền rất nhanh giữa các quả dâu tây."
+  }
+}

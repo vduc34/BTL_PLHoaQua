@@ -1,0 +1,22 @@
+# Môi trường ảo Python (tuyệt đối không up)
+.venv/
+env/
+venv/
+
+# Thư mục dữ liệu & ảnh nặng
+data/
+datasets/
+*.zip
+*.tar.gz
+
+# Python cache & logs
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# Cấu hình IDE & Hệ điều hành
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

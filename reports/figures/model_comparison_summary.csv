@@ -1,0 +1,4 @@
+Model,Test Accuracy (%),Macro F1-Score (%),False Safe Rate - FSR (%),CPU Latency (ms/img),Model Size (MB)
+CUSTOM_CNN,92.45,92.42,3.85,14.2,4.65
+MOBILENET_V2,97.82,97.81,0.85,24.6,8.77
+EFFICIENTNET_B0,99.12,99.12,0.28,36.4,15.63

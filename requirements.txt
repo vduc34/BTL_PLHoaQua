@@ -1,0 +1,14 @@
+# Requirements for Fruit Classification & Freshness Assessment project (VS Code & Colab)
+torch>=2.1.0
+torchvision>=0.16.0
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+python-multipart>=0.0.9
+jinja2>=3.1.3
+pillow>=10.2.0
+numpy>=1.26.0
+pandas>=2.1.0
+scikit-learn>=1.4.0
+matplotlib>=3.8.0
+kagglehub>=0.2.5
+tqdm>=4.66.0

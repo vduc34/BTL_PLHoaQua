@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FruitAI Inspector — Hệ Thống Phân Loại & Kiểm Định Chất Lượng Hoa Quả (Grad-CAM XAI)</title>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+</head>
+<body>
+  <!-- HEADER / TOPBAR -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">🍎</div>
+      <div>
+        <h1>FruitAI Quality & Multi-Class Inspector</h1>
+        <p class="subtitle">Hệ thống Phân loại Đa lớp & Đánh giá Độ tươi/hỏng Hoa quả ứng dụng Transfer Learning + Grad-CAM XAI</p>
+      </div>
+    </div>
+
+    <div class="topbar-actions">
+      <div class="device-pill" id="deviceBadge">
+        <span class="dot"></span>
+        <span id="deviceText">Thiết bị: Đang tải...</span>
+      </div>
+      <button class="btn btn-outline" id="btnReloadModels" title="Quét lại thư mục models/ sau khi chép file .pth từ Google Colab">
+        🔄 Nạp lại Trọng số (.pth)
+      </button>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" data-tab="tab-single">🔍 1. Kiểm Định Đơn Ảnh & Giải Thích Grad-CAM</button>
+    <button class="tab-btn" data-tab="tab-compare">⚖️ 2. Đấu Trường So Sánh 3 Mô Hình (Ablation Live)</button>
+    <button class="tab-btn" data-tab="tab-batch">📦 3. Kiểm Định Lô Hàng & Lịch Sử Xuất CSV</button>
+    <button class="tab-btn" data-tab="tab-report">📊 4. Thư Viện 12 Biểu Đồ Báo Cáo (300 DPI)</button>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main class="container">
+    <!-- TRẠNG THÁI 3 MÔ HÌNH TRONG THƯ MỤC MODELS/ -->
+    <section class="model-status-strip" id="modelStatusStrip"></section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 1: KIỂM ĐỊNH ĐƠN ẢNH & GIẢI THÍCH GRAD-CAM                       -->
+    <!-- ==================================================================== -->
+    <section class="tab-pane active" id="tab-single">
+      <div class="grid-2col">
+        <!-- CỘT TRÁI: ĐẦU VÀO (UPLOAD / WEBCAM / ẢNH MẪU) -->
+        <div class="card">
+          <div class="card-header">
+            <h2>1. Nguồn Ảnh Đầu Vào & Chọn Mô Hình</h2>
+            <select id="archSelect" class="select-control">
+              <option value="efficientnet_b0">EfficientNet-B0 (SE-Attention - Khuyên dùng)</option>
+              <option value="mobilenet_v2">MobileNetV2 (Siêu nhẹ - Tốc độ cao)</option>
+              <option value="custom_cnn">Custom CNN (Baseline 4 khối Conv)</option>
+            </select>
+          </div>
+
+          <!-- Vùng Kéo Thả Ảnh -->
+          <div class="dropzone" id="dropzone">
+            <input type="file" id="fileInput" accept="image/*" hidden />
+            <div class="dropzone-content" id="dropzonePrompt">
+              <div class="upload-icon">📸</div>
+              <h3>Kéo thả ảnh hoa quả vào đây hoặc Nhấn để chọn file</h3>
+              <p>Hỗ trợ JPG, PNG (tự động xử lý nền trong suốt RGBA), WEBP</p>
+            </div>
+            <img id="previewInputImg" class="preview-img hidden" alt="Ảnh xem trước" />
+          </div>
+
+          <!-- Cụm nút Hành động & Webcam -->
+          <div class="action-row">
+            <button class="btn btn-primary" id="btnPredictSingle">🚀 Phân Loại & Trích Xuất Grad-CAM</button>
+            <button class="btn btn-secondary" id="btnToggleWebcam">🎥 Mở Camera Trực Tiếp</button>
+          </div>
+
+          <!-- Khung Webcam trực tiếp (Ẩn mặc định) -->
+          <div class="webcam-box hidden" id="webcamBox">
+            <video id="webcamVideo" autoplay playsinline></video>
+            <canvas id="webcamCanvas" hidden></canvas>
+            <div class="webcam-controls">
+              <button class="btn btn-success" id="btnCaptureWebcam">📸 Chụp & Kiểm Định Ngay</button>
+              <button class="btn btn-danger" id="btnCloseWebcam">✖ Đóng Camera</button>
+            </div>
+          </div>
+
+          <!-- Bộ Ảnh Mẫu Thử Nhanh -->
+          <div class="samples-section">
+            <div class="samples-header">
+              <span>⚡ Thử nhanh với Bộ ảnh mẫu chuẩn:</span>
+              <small>(Click vào 1 ảnh bất kỳ để chạy thử ngay)</small>
+            </div>
+            <div class="samples-grid" id="samplesGrid"></div>
+          </div>
+        </div>
+
+        <!-- CỘT PHẢI: KẾT QUẢ DỰ ĐOÁN, TOP-3, GRAD-CAM & TRI THỨC NÔNG SẢN -->
+        <div class="card" id="singleResultCard">
+          <div class="card-header">
+            <h2>2. Kết Quả Chẩn Đoán AI & Bản Đồ Nhiệt Grad-CAM</h2>
+            <span class="latency-tag" id="resLatency">⏱ -- ms</span>
+          </div>
+
+          <div id="emptyResultState" class="empty-state">
+            <div class="empty-icon">🔬</div>
+            <p>Hãy tải ảnh lên, chụp từ Camera hoặc chọn 1 ảnh mẫu bên trái để xem kết quả phân loại, phân phối xác suất Top-3 và giải thích vùng chú ý Grad-CAM.</p>
+          </div>
+
+          <div id="filledResultState" class="hidden">
+            <!-- Banner Kết luận Chính -->
+            <div class="verdict-banner" id="verdictBanner">
+              <div>
+                <span class="badge-status" id="resStatusBadge">ĐẠT CHUẨN TƯƠI</span>
+                <h3 id="resViName">Táo Tươi (Fresh Apple)</h3>
+                <p class="res-sub" id="resModelInfo">Mô hình: EFFICIENTNET_B0 | Nhãn gốc: fresh_apple</p>
+              </div>
+              <div class="confidence-ring">
+                <span class="conf-num" id="resConfidence">98.5%</span>
+                <small>Độ tự tin</small>
+              </div>
+            </div>
+
+            <!-- Thanh chỉ báo An toàn Thực phẩm (Tươi vs Rủi ro Hỏng) -->
+            <div class="safety-meter-box">
+              <div class="safety-labels">
+                <span class="text-fresh">🟢 Điểm Độ Tươi: <strong id="resFreshScore">0%</strong></span>
+                <span class="text-rotten">🔴 Rủi Ro Hư Hỏng: <strong id="resSpoilScore">0%</strong></span>
+              </div>
+              <div class="dual-progress">
+                <div class="bar-fresh" id="barFresh" style="width: 50%"></div>
+                <div class="bar-rotten" id="barRotten" style="width: 50%"></div>
+              </div>
+            </div>
+
+            <!-- Trực quan hóa Ảnh gốc & Bản đồ nhiệt Grad-CAM có thanh trượt Opacity -->
+            <div class="xai-comparison-grid">
+              <div class="xai-box">
+                <span class="xai-label">Ảnh Chuẩn Hóa (224 × 224 px)</span>
+                <img id="resOrigImg" alt="Ảnh gốc" />
+              </div>
+              <div class="xai-box">
+                <div class="xai-label-row">
+                  <span>Bản Đồ Nhiệt Grad-CAM (XAI)</span>
+                  <label class="slider-label">
+                    Độ phủ: <span id="opacityVal">45%</span>
+                    <input type="range" id="gradcamOpacitySlider" min="0" max="100" value="45" />
+                  </label>
+                </div>
+                <div class="gradcam-stack">
+                  <img id="resBaseImgForStack" alt="Base RGB" />
+                  <img id="resPureHeatmapImg" class="heatmap-layer" alt="Pure Grad-CAM" style="opacity: 0.45;" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Biểu đồ Thanh Ngang Top-3 Xác Suất -->
+            <div class="top3-section">
+              <h4>📊 Phân Phối Xác Suất Top-3 Lớp Dự Đoán Cao Nhất</h4>
+              <div id="top3Container" class="top3-bars"></div>
+            </div>
+
+            <!-- Thẻ Tri Thức Nông Sản & Khuyến Nghị Bảo Quản / Cảnh Báo Vi Sinh -->
+            <div class="knowledge-card" id="knowledgeCard">
+              <h4>💡 Hồ Sơ Dinh Dưỡng, Bảo Quản & Khuyến Nghị Kiểm Định</h4>
+              <div class="knowledge-grid">
+                <div><strong>Năng lượng (100g):</strong> <span id="knCalories">--</span></div>
+                <div><strong>Nhiệt độ bảo quản:</strong> <span id="knStorage">--</span></div>
+                <div><strong>Thời hạn sử dụng:</strong> <span id="knShelfLife">--</span></div>
+                <div><strong>Dưỡng chất / Vi sinh:</strong> <span id="knVitamins">--</span></div>
+              </div>
+              <p class="kn-detail"><strong>Đánh giá bề mặt:</strong> <span id="knAssessment">--</span></p>
+              <p class="kn-rec" id="knRecommendation">--</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 2: ĐẤU TRƯỜNG SO SÁNH TRỰC TIẾP 3 MÔ HÌNH                        -->
+    <!-- ==================================================================== -->
+    <section class="tab-pane" id="tab-compare">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>⚖️ Đấu Trường So Sánh Thực Nghiệm 3 Kiến Trúc Trên Cùng 1 Ảnh</h2>
+            <p class="subtitle">Đối chiếu trực tiếp kết quả dự đoán, vùng chú ý Grad-CAM và tốc độ CPU giữa <strong>EfficientNet-B0</strong>, <strong>MobileNetV2</strong> và <strong>Custom CNN</strong>.</p>
+          </div>
+          <button class="btn btn-primary" id="btnRunCompare">⚡ Chạy So Sánh Cả 3 Mô Hình (Trên Ảnh Đang Chọn)</button>
+        </div>
+
+        <div id="compareSummaryBanner" class="consensus-banner hidden"></div>
+        <div id="compareArenaGrid" class="arena-3col">
+          <div class="empty-state">
+            <p>Hãy chọn 1 ảnh ở Tab 1 (hoặc ảnh mẫu) rồi nhấn <strong>"Chạy So Sánh Cả 3 Mô Hình"</strong> để xem bảng đối chiếu trực quan.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 3: KIỂM ĐỊNH LÔ HÀNG (BATCH) & LỊCH SỬ PHIÊN LÀM VIỆC           -->
+    <!-- ==================================================================== -->
+    <section class="tab-pane" id="tab-batch">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>📦 Kiểm Định Chất Lượng Lô Hàng Tự Động (Batch Quality Control)</h2>
+            <p class="subtitle">Tải lên nhiều ảnh hoa quả cùng lúc để thống kê tỷ lệ đạt chuẩn và xuất biên bản kiểm định CSV.</p>
+          </div>
+          <div class="batch-actions">
+            <input type="file" id="batchFileInput" accept="image/*" multiple hidden />
+            <button class="btn btn-primary" id="btnSelectBatchFiles">📂 Chọn Nhiều Ảnh Lô Hàng</button>
+            <button class="btn btn-outline" id="btnExportHistoryCsv">📥 Xuất Lịch Sử Kiểm Định (.CSV)</button>
+            <button class="btn btn-danger" id="btnClearHistory">🗑️ Xóa Lịch Sử</button>
+          </div>
+        </div>
+
+        <!-- KPI Thống kê Phiên Kiểm Định -->
+        <div class="kpi-grid">
+          <div class="kpi-box">
+            <span class="kpi-title">Tổng Số Mẫu Đã Kiểm Tra</span>
+            <strong class="kpi-val" id="kpiTotal">0</strong>
+          </div>
+          <div class="kpi-box kpi-fresh">
+            <span class="kpi-title">Số Quả Tươi Đạt Chuẩn (SAFE)</span>
+            <strong class="kpi-val" id="kpiFresh">0</strong>
+          </div>
+          <div class="kpi-box kpi-rotten">
+            <span class="kpi-title">Số Quả Hỏng Cần Loại Bỏ (REJECT)</span>
+            <strong class="kpi-val" id="kpiRotten">0</strong>
+          </div>
+          <div class="kpi-box kpi-rate">
+            <span class="kpi-title">Tỷ Lệ Lô Hàng Đạt Chuẩn (%)</span>
+            <strong class="kpi-val" id="kpiPassRate">0.0%</strong>
+          </div>
+        </div>
+
+        <!-- Bảng Lịch Sử Kiểm Định -->
+        <div class="table-responsive">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Ảnh Thu Nhỏ</th>
+                <th>Tên File / Nguồn</th>
+                <th>Mô Hình</th>
+                <th>Kết Quả Phân Loại</th>
+                <th>Trạng Thái Chất Lượng</th>
+                <th>Độ Tự Tin</th>
+                <th>Tốc Độ (CPU)</th>
+                <th>Thời Gian</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <tr>
+                <td colspan="9" class="text-center">Chưa có mẫu nào được kiểm định trong phiên này.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 4: THƯ VIỆN 12 BIỂU ĐỒ TRỰC QUAN HÓA BÁO CÁO (300 DPI)           -->
+    <!-- ==================================================================== -->
+    <section class="tab-pane" id="tab-report">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>📊 Thư Viện 12 Biểu Đồ Học Thuật Trước & Sau Khi Train (300 DPI)</h2>
+            <p class="subtitle">Toàn bộ biểu đồ lưu tại <code>e:\BTL_PLHoa_qua\reports\figures\</code> phục vụ đưa trực tiếp vào Báo cáo Word/LaTeX.</p>
+          </div>
+          <button class="btn btn-outline" id="btnRefreshFigures">🔄 Làm Mới Thư Viện Ảnh</button>
+        </div>
+        <div id="reportFiguresGallery" class="figures-gallery"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
